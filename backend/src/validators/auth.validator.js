@@ -18,29 +18,20 @@ const password = z
 //////////////////////////////////////////////////////////
 
 export const signupSchema = z.object({
-  fullname: z
-    .string()
-    .min(3, "Full name must be at least 3 characters")
-    .trim(),
-
-  email,
-
-  password,
-
-  country: z
-    .string()
-    .length(2, "Country must be ISO code")
-    .optional(),
-
-  interests: z
-    .array(z.string())
-    .min(1, "Select at least one interest")
-    .optional()
+  body: z.object({
+    fullname: z.string().min(3),
+    email,
+    password,
+    country: z.string().length(2).optional(),
+    interests: z.array(z.string()).optional()
+  })
 });
 
 export const loginSchema = z.object({
-  email,
-  password
+  body: z.object({
+    email,
+    password
+  })
 });
 
 //////////////////////////////////////////////////////////
@@ -48,14 +39,16 @@ export const loginSchema = z.object({
 //////////////////////////////////////////////////////////
 
 export const sendOtpSchema = z.object({
-  email
+  body: z.object({
+    email
+  })
 });
 
 export const verifyOtpSchema = z.object({
-  email,
-  otp: z
-    .string()
-    .length(6, "OTP must be 6 digits")
+  body: z.object({
+    email,
+    otp: z.string().length(6)
+  })
 });
 
 //////////////////////////////////////////////////////////

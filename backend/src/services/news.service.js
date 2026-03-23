@@ -18,11 +18,17 @@ async getTopHeadlines(country = "in") {
   if (cached) return cached;
 
   try {
+
+    if (!process.env.NEWS_API_KEY) {
+      throw new ApiError(500, "NEWS_API_KEY missing in .env");
+    }
+
     const { data } = await axios.get(
       `${NEWS_BASE_URL}/top-headlines`,
       {
         params: {
           country,
+          lang:"en",
           token: process.env.NEWS_API_KEY
         },
         timeout: 5000
@@ -36,7 +42,13 @@ async getTopHeadlines(country = "in") {
     return articles;
 
   } catch (err) {
-    throw new ApiError(500, "Failed to fetch headlines");
+
+    console.error("GNews Error:", err.response?.data || err.message);
+
+    throw new ApiError(
+      500,
+      err.response?.data?.message || "Failed to fetch headlines"
+    );
   }
 },
 
@@ -52,11 +64,13 @@ async getCategoryNews(category, country = "in") {
   if (cached) return cached;
 
   try {
+
     const { data } = await axios.get(
       `${NEWS_BASE_URL}/top-headlines`,
       {
         params: {
           topic: category,
+          lang: "en",
           country,
           token: process.env.NEWS_API_KEY
         },
@@ -70,8 +84,14 @@ async getCategoryNews(category, country = "in") {
 
     return articles;
 
-  } catch {
-    throw new ApiError(500, "Failed to fetch category news");
+  } catch (err) {
+
+    console.error("Category Error:", err.response?.data || err.message);
+
+    throw new ApiError(
+      500,
+      err.response?.data?.message || "Failed to fetch category news"
+    );
   }
 },
 
@@ -87,11 +107,13 @@ async searchNews(query) {
   if (cached) return cached;
 
   try {
+
     const { data } = await axios.get(
       `${NEWS_BASE_URL}/search`,
       {
         params: {
           q: query,
+          lang:"en",
           token: process.env.NEWS_API_KEY
         },
         timeout: 5000
@@ -104,8 +126,14 @@ async searchNews(query) {
 
     return articles;
 
-  } catch {
-    throw new ApiError(500, "Search failed");
+  } catch (err) {
+
+    console.error("Search Error:", err.response?.data || err.message);
+
+    throw new ApiError(
+      500,
+      err.response?.data?.message || "Search failed"
+    );
   }
 }
 

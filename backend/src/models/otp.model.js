@@ -41,10 +41,9 @@ const otpSchema = new mongoose.Schema(
 otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 // Hash OTP
-otpSchema.pre("save", async function (next) {
-  if (!this.isModified("otpHash")) return next();
+otpSchema.pre("save", async function () {
+  if (!this.isModified("otpHash")) return;
   this.otpHash = await bcrypt.hash(this.otpHash, 10);
-  next();
 });
 
 // Verify OTP

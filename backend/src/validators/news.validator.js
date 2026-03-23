@@ -1,11 +1,15 @@
 import { z } from "zod";
 
 export const headlinesQuerySchema = z.object({
-  country: z.string().length(2).optional()
+  query: z.object({
+    country: z.string().length(2).optional()
+  })
 });
 
 export const searchQuerySchema = z.object({
-  q: z.string().min(1)
+  query: z.object({
+    q: z.string().min(1)
+  })
 });
 
 export const categoryParamSchema = z.object({
